@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>链接整合平台</title>
+    <link rel="stylesheet" href="../static/css/layui.css">
+    <script src="../static/jquery-3.0.0.min.js"></script>
+</head>
+<style>
+    .div_center {
+        text-align: center
+    }
+</style>
+<body>
+
+<div class="layui-container">
+    <div class="layui-progress" style="margin: 15px 0 30px;">
+        <div class="layui-progress-bar" lay-percent="100%"></div>
+    </div>
+
+    <div class="div_center">
+        <h3 style="color: #01AAED">本平台ip地址为：10.43.1.7，整合 数据抓包页面、网络代理、全平台文字传递功能</h3>
+    </div>
+
+    <blockquote class="layui-elem-quote" style="margin-top: 30px;">
+        <span>网络代理功能：(可用于选号网手机端访问)</span>
+    </blockquote>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th></th>
+            <th>代理服务器ip地址</th>
+            <th>代理服务器端口号</th>
+            <th>使用帮助</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>网络代理服务器</td>
+            <td>10.43.1.7</td>
+            <td>8888</td>
+            <td>
+                <button test-active="confirmTrans" class="layui-btn layui-btn-xs layui-btn layui-btn-normal">点击查看
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <blockquote class="layui-elem-quote" style="margin-top: 30px;">
+        <span>网络数据抓包功能：(可用于手机端数据抓包功能，如果抓取https包，需要安装证书)&nbsp&nbsp<a style="color: #01AAED" test-active="help_sw"
+                                                                    class="layui-btn-xs layui-btn layui-btn-primary layui-border-blue">查看帮助</a></span>
+        <b style="color: crimson;float: right">使用完抓包服务，请断开抓包服务器连接！</b>
+    </blockquote>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th></th>
+            <th>ip地址</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>web数据查看平台</td>
+            <td><a href="http://10.43.1.7:9200" target="_blank" style="color: #01AAED">10.43.1.7:9200</a></td>
+            <td><a href="http://10.43.1.7:9200" target="_blank"
+                   class="layui-btn-xs layui-btn layui-btn-primary layui-border-blue">点击跳转</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th></th>
+            <th>抓包服务器代理ip地址</th>
+            <th>端口号</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>抓包代理服务器</td>
+            <td>10.43.1.7</td>
+            <td>4272</td>
+        </tr>
+        <tr>
+            <td>证书下载地址</td>
+            <td>http://mitm.it</td>
+            <td>- (手机必须连接上抓包代理服务器后，才可以访问下载)</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <blockquote class="layui-elem-quote" style="margin-top: 30px;">
+        <div class="layui-text">
+            全平台文字传递功能：用于在各个平台复制信息后，传递到其他平台使用，免登陆钉钉、QQ &nbsp&nbsp(只会保存最新的一条信息)
+        </div>
+    </blockquote>
+    <button test-active="test-form" class="layui-btn layui-btn-xs layui-btn layui-btn-normal">点击添加</button>
+</div>
+
+
+<!-- 引入 layui.js 的 <script> 标签最好放置在 html 末尾 -->
+<script src="../static/layui.js"></script>
+<script>
+    layui.use(function () {
+        var layer = layui.layer
+            , form = layui.form
+            , laypage = layui.laypage
+            , element = layui.element
+            , laydate = layui.laydate
+            , util = layui.util;
+        //欢迎信息
+        // layer.msg('欢迎访问');
+
+        //输出版本号
+        lay('#version').html(layui.v);
+
+        //日期
+        laydate.render({
+            elem: '#test2'
+            , value: new Date()
+            , isInitValue: true
+        });
+        //触发事件
+        util.event('test-active', {
+            "confirmTrans": function () {
+                //配置一个透明的询问框
+                layer.msg(`首先打开你手机或者测试机的无线网络，然后连接上公司WIFI，Liebao-5G或者Liebao-Ap网络<br/>
+                            打开无线网络设置，点开高级设置，有一个代理设置，打开选择手动,然后把代理ip和端口号填写上，保存<br>
+                            即可成功连上代理服务器，此时就可以成功访问。如果还是不行，请关闭WIFI，然后重新连接即可<br>
+                            如果你想访问你自己的选号网，你需要确保你的选号网地址在代理服务器里做了hosts映射<br>
+                            如果没有，可以将你自己的选号网地址添加到代理服务器的hosts文件即可，需要注意格式正确`, {
+                    time: 200000,
+                    btn: ['明白了']
+                });
+            },
+            "help_sw": function () {
+                //配置一个透明的询问框
+                layer.msg(`<b style="color: #1E9FFF">抓取http数据包：</b><br/>
+                            抓取http数据包，无需下载证书，可以直接配置好对应的抓包代理ip和端口,注意此处端口是抓包数据端口<br>
+                            如何配置代理，可以参考上面网络代理配置说明<br>
+                            <b style="color: #1E9FFF">抓取http + https 数据包：</b><br/>
+                            抓去https数据包，需要在使用的手机上安装证书，才可以抓取https数据包<br/>
+                            第一步需要先连接上抓包服务器的ip和抓包端口，连接好之后，使用手机浏览器（小米自带浏览器不行）<br>
+                            用手机浏览器打开, 下载证书：<a href="http://mitm.it" target="_blank" style="color: #eb7350">http://mitm.it</a>&nbsp&nbsp选择对应操作系统安装证书<br>
+                            安装后，信任刚才安装的证书，然后即可开始抓包，通过web数据查看平台查看数据包
+                            `, {
+                    time: 200000,
+                    btn: ['明白了']
+                });
+            },
+            'test-form': function () {
+                layer.open({
+                    type: 1
+                    , resize: false
+                    , shadeClose: true
+                    , area: '350px'
+                    , title: '填写消息'
+                    , content: ['<ul class="layui-form layui-form-pane" style="margin: 15px;">'
+                        , '<li class="layui-form-item">'
+                        , '<label class="layui-form-label">用户名</label>'
+                        , '<div class="layui-input-block">'
+                        , '<input class="layui-input" lay-verify="required" name="user">'
+                        , '</div>'
+                        , '</li>'
+                        , '<li class="layui-form-item">'
+                        , '<label class="layui-form-label">传递的消息</label>'
+                        , '<div class="layui-input-block">'
+                        , '<input class="layui-input" lay-verify="required" name="message">'
+                        , '</div>'
+                        , '</li>'
+                        , '<li class="layui-form-item" style="text-align:center;">'
+                        , '<button type="submit" lay-submit lay-filter="*" class="layui-btn">提交</button>'
+                        , '</li>'
+                        , '</ul>'].join('')
+                    , success: function (layero, index) {
+                        layero.find('.layui-layer-content').css('overflow', 'visible');
+                        form.render().on('submit(*)', function (data) {
+                            console.log(data)
+                            $.ajax({
+                                url: '/add',
+                                method: 'post',
+                                data: data.field,
+                                dataType: 'JSON',
+                                form: data,
+                                success: function (data) {
+                                    console.log(data.code)
+                                    if (data.code === 200) {
+                                        console.log(data.code === 200)
+                                        layer.alert(data.msg, {
+                                            icon: 6,
+                                            title: "成功"
+                                        })
+                                        layer.close(index); //关闭层
+                                    } else {
+                                        layer.alert(data.msg, {
+                                            icon: 5,
+                                            title: "错误"
+                                        });
+                                    }
+                                },
+                                error: function (e) {
+                                    layer.alert("服务器繁忙！", {
+                                        icon: 5,
+                                        title: "错误"
+                                    });
+                                }
+                            });
+                            return false;
+                            // layer.msg(JSON.stringify(data.field), {icon: 1});
+                            // layer.close(index); //关闭层
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>
