@@ -27,11 +27,6 @@
         <span>网络代理功能：(可用于选号网手机端访问)</span>
     </blockquote>
     <table class="layui-table">
-        <colgroup>
-            <col width="150">
-            <col width="200">
-            <col>
-        </colgroup>
         <thead>
         <tr>
             <th></th>
@@ -60,8 +55,8 @@
     </blockquote>
     <table class="layui-table">
         <colgroup>
-            <col width="150">
-            <col width="200">
+            <col width="300">
+            <col width="300">
             <col>
         </colgroup>
         <thead>
@@ -73,7 +68,7 @@
         </thead>
         <tbody>
         <tr>
-            <td>web数据查看平台</td>
+            <td>web数据查看平台 (查看抓包数据)</td>
             <td><a href="http://10.43.1.7:9200" target="_blank" style="color: #01AAED">10.43.1.7:9200</a></td>
             <td><a href="http://10.43.1.7:9200" target="_blank"
                    class="layui-btn-xs layui-btn layui-btn-primary layui-border-blue">点击跳转</a></td>
@@ -83,8 +78,8 @@
 
     <table class="layui-table">
         <colgroup>
-            <col width="150">
-            <col width="200">
+            <col width="300">
+            <col width="300">
             <col>
         </colgroup>
         <thead>
@@ -96,7 +91,7 @@
         </thead>
         <tbody>
         <tr>
-            <td>抓包代理服务器</td>
+            <td>手机抓包代理服务器</td>
             <td>10.43.1.7</td>
             <td>4272</td>
         </tr>
@@ -111,9 +106,37 @@
     <blockquote class="layui-elem-quote" style="margin-top: 30px;">
         <div class="layui-text">
             全平台文字传递功能：用于在各个平台复制信息后，传递到其他平台使用，免登陆钉钉、QQ &nbsp&nbsp(只会保存最新的一条信息)
+            <button test-active="test-form" class="layui-btn layui-btn-xs layui-btn layui-btn-normal"
+                    style="float: right">点击添加
+            </button>
         </div>
     </blockquote>
-    <button test-active="test-form" class="layui-btn layui-btn-xs layui-btn layui-btn-normal">点击添加</button>
+
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="names" required lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">传递的消息</label>
+            <div class="layui-input-block">
+                <input type="text" name="msg" id="msgs" required lay-verify="required" placeholder="请输入需要传递的消息"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="reset" class="layui-btn layui-btn-primary layui-btn-xs">点击重置</button>
+                <button class="layui-btn layui-btn-xs layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                    立即提交
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
 
@@ -133,11 +156,36 @@
         //输出版本号
         lay('#version').html(layui.v);
 
-        //日期
-        laydate.render({
-            elem: '#test2'
-            , value: new Date()
-            , isInitValue: true
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            $.ajax({
+                url: '/add',
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                form: data,
+                success: function (data) {
+                    if (data.code === 200) {
+                        layer.alert(data.msg, {
+                            icon: 6,
+                            title: "成功"
+                        })
+                        $("#msgs").val("")
+                    } else {
+                        layer.alert(data.msg, {
+                            icon: 5,
+                            title: "错误"
+                        });
+                    }
+                },
+                error: function (e) {
+                    layer.alert("服务器繁忙！", {
+                        icon: 5,
+                        title: "错误"
+                    });
+                }
+            });
+            return false
         });
         //触发事件
         util.event('test-active', {
@@ -194,7 +242,6 @@
                     , success: function (layero, index) {
                         layero.find('.layui-layer-content').css('overflow', 'visible');
                         form.render().on('submit(*)', function (data) {
-                            console.log(data)
                             $.ajax({
                                 url: '/add',
                                 method: 'post',
@@ -202,9 +249,7 @@
                                 dataType: 'JSON',
                                 form: data,
                                 success: function (data) {
-                                    console.log(data.code)
                                     if (data.code === 200) {
-                                        console.log(data.code === 200)
                                         layer.alert(data.msg, {
                                             icon: 6,
                                             title: "成功"
@@ -225,8 +270,6 @@
                                 }
                             });
                             return false;
-                            // layer.msg(JSON.stringify(data.field), {icon: 1});
-                            // layer.close(index); //关闭层
                         });
                     }
                 });
