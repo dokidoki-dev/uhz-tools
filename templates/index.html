@@ -116,14 +116,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="names" required lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+                <input type="text" name="users" required lay-verify="required" placeholder="请输入用户名" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">传递的消息</label>
             <div class="layui-input-block">
-                <input type="text" name="msg" id="msgs" required lay-verify="required" placeholder="请输入需要传递的消息"
+                <input type="text" name="msgs" id="context_msg" required lay-verify="required" placeholder="请输入需要传递的消息"
                        autocomplete="off"
                        class="layui-input">
             </div>
@@ -161,16 +161,15 @@
             $.ajax({
                 url: '/add',
                 method: 'post',
-                data: data.field,
+                data: {"user": data.field.users, "message": data.field.msgs },
                 dataType: 'JSON',
-                form: data,
                 success: function (data) {
                     if (data.code === 200) {
                         layer.alert(data.msg, {
                             icon: 6,
                             title: "成功"
-                        })
-                        $("#msgs").val("")
+                        });
+                        $("#context_msg").val("")
                     } else {
                         layer.alert(data.msg, {
                             icon: 5,
@@ -178,7 +177,7 @@
                         });
                     }
                 },
-                error: function (e) {
+                error: function (error) {
                     layer.alert("服务器繁忙！", {
                         icon: 5,
                         title: "错误"
@@ -245,18 +244,18 @@
                             $.ajax({
                                 url: '/add',
                                 method: 'post',
-                                data: data.field,
+                                data: {"user": data.field.user, "message": data.field.message}, // 使用Request payload格式传递json数据, 需要使用JSON.stringify() 处理数据
                                 dataType: 'JSON',
-                                form: data,
-                                success: function (data) {
-                                    if (data.code === 200) {
-                                        layer.alert(data.msg, {
+                                {#contentType: 'application/json', // 使用Request payload格式传递json数据,需要使用这个，注释掉就是使用Form data 方式传递#}
+                                success: function (result) {
+                                    if (result.code === 200) {
+                                        layer.alert(result.msg, {
                                             icon: 6,
                                             title: "成功"
                                         })
                                         layer.close(index); //关闭层
                                     } else {
-                                        layer.alert(data.msg, {
+                                        layer.alert(result.msg, {
                                             icon: 5,
                                             title: "错误"
                                         });

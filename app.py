@@ -1,25 +1,14 @@
-import json
+from flask_migrate import Migrate, MigrateCommand
+from tools.message.models import User
+from ext import db
+from tools import create_app
+from flask_script import Manager
 
-from flask import Flask, request, render_template, Response
-
-app = Flask(__name__)
-
-
-@app.route('/add', methods=["POST"])
-def hello_world():
-    data = {
-        "object": None,
-        "msg": "成功",
-        "code": 200,
-        "result": False
-    }
-    return Response(json.dumps(data), content_type='application/json')
-
-
-@app.route("/", methods=["GET"])
-def index():
-    return render_template("index.html")
+app = create_app()
+manger = Manager(app=app)
+migrate = Migrate(app=app, db=db)
+manger.add_command('db', MigrateCommand)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    manger.run()
