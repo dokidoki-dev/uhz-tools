@@ -11,7 +11,7 @@ tools = Blueprint("tools", __name__)
 
 
 @tools.route('/add', methods=["POST"])
-def hello_world():
+def add_msg():
     data = {
         "object": None,
         "msg": "添加成功",
@@ -41,7 +41,7 @@ def get_msg(user):
     user_li = User.query.filter(User.user == user).first()
     if user_li is None:
         return render_template("404.html")
-    return "1"
+    return render_template("copy.html", msg=user_li)
 
 
 @tools.route("/", methods=["GET"])
