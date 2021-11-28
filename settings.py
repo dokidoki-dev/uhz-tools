@@ -15,3 +15,7 @@ class Development(Config):
 class Production(Config):
     ENV = 'production'
     DEBUG = False
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:liebao123@10.43.1.7:3306/msg?charset=utf8mb4"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_RECORD_QUERIES = False
