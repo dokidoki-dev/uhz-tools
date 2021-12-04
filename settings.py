@@ -1,6 +1,6 @@
-# 配置文件
+
 class Config:
-    pass
+    download_mode = 2  # 1 使用非流式下载  2 使用流式下载
 
 
 class Development(Config):
