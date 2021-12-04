@@ -20,7 +20,7 @@
     </div>
 
     <div class="div_center">
-        <h3 style="color: #01AAED" class="layui-anim-rotate">本平台ip地址为：10.43.1.7，整合 数据抓包页面、网络代理、文字传递功能</h3>
+        <h3 style="color: #01AAED" class="layui-anim-rotate">平台ip地址为：10.43.1.7，整合 数据抓包页面、网络代理、信息传递功能</h3>
     </div>
 
     <blockquote class="layui-elem-quote" style="margin-top: 30px;">
@@ -105,7 +105,9 @@
 
     <blockquote class="layui-elem-quote" style="margin-top: 30px;">
         <div class="layui-text">
-            文字传递功能：用于在各个平台复制信息后，传递到其他平台使用，免登陆钉钉、QQ &nbsp&nbsp(只会保存最新的一条信息)
+            信息传递功能：用于在各个平台复制信息后，传递到其他平台使用 &nbsp&nbsp(只会保存最新的一条信息，支持文字和文件传输)&nbsp;&nbsp;
+            <a style="color: #01AAED" test-active="info"
+               class="layui-btn-xs layui-btn layui-btn-primary layui-border-blue">使用说明</a>
             <button test-active="test-form" class="layui-btn layui-btn-xs layui-btn layui-btn-normal"
                     style="float: right">点击添加
             </button>
@@ -116,9 +118,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="users" required lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+                <input type="text" name="users" id="user_name" required lay-verify="required" placeholder="请输入用户名"
+                       autocomplete="off"
                        class="layui-input">
             </div>
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" id="test3"
+                    style="height:23px;margin-top:10px;top:50%;"><i class="layui-icon"></i>上传文件
+            </button>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">传递的消息</label>
@@ -131,7 +137,7 @@
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-xs">点击重置</button>
-                <button class="layui-btn layui-btn-xs layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                <button class="layui-btn layui-btn-xs layui-btn-normal" lay-submit lay-filter="formDemo">
                     立即提交
                 </button>
             </div>
@@ -146,22 +152,15 @@
     layui.use(function () {
         var layer = layui.layer
             , form = layui.form
-            , laypage = layui.laypage
-            , element = layui.element
-            , laydate = layui.laydate
+            , upload = layui.upload
             , util = layui.util;
-        //欢迎信息
-        // layer.msg('欢迎访问');
-
-        //输出版本号
-        lay('#version').html(layui.v);
 
         //监听提交
         form.on('submit(formDemo)', function (data) {
             $.ajax({
                 url: '/add',
                 method: 'post',
-                data: {"user": data.field.users, "message": data.field.msgs },
+                data: {"user": data.field.users, "message": data.field.msgs},
                 dataType: 'JSON',
                 success: function (data) {
                     if (data.code === 200) {
@@ -186,6 +185,33 @@
             });
             return false
         });
+
+        upload.render({
+            elem: '#test3'
+            , url: '/upload'
+            , accept: 'file' //普通文件
+            , before: function (obj) {
+                loading = layer.load(1);
+                this.data = {'user': $("#user_name").val()};
+            }
+            , done: function (data) {
+                if (data.code === 200) {
+                    layer.msg(data.msg);
+                    layer.close(loading);
+                } else {
+                    layer.alert(data.msg, {
+                        icon: 5,
+                        title: "错误"
+                    });
+                    layer.close(loading);
+                }
+            }
+            , error: function (error) {
+                layer.msg('服务器繁忙！！');
+                layer.close(loading);
+            }
+        });
+
         //触发事件
         util.event('test-active', {
             "confirmTrans": function () {
@@ -209,6 +235,19 @@
                             第一步需要先连接上抓包服务器的ip和抓包端口，连接好之后，使用手机浏览器（小米自带浏览器不行）<br>
                             用手机浏览器打开, 下载证书：<a href="http://mitm.it" target="_blank" style="color: #eb7350">http://mitm.it</a>&nbsp&nbsp选择对应操作系统安装证书<br>
                             安装后，信任刚才安装的证书，然后即可开始抓包，通过web数据查看平台查看数据包
+                            `, {
+                    time: 200000,
+                    btn: ['明白了']
+                });
+            },
+            "info": function () {
+                //配置一个透明的询问框
+                layer.msg(`<b style="color: #1E9FFF">文字传递：</b><br/>
+                            必须首先填写用户名，用户名就是用来传递信息的关键，需要记住此用户名，填写用户名、消息内容后，点击提交即可<br/>
+                            需要获取填入的信息，访问平台地址：<b style="color:#eb7350">10.43.1.7/你填写的用户名</b>，即可获取消息，点击复制按钮，即可复制到剪辑版<br/>
+                            <b style="color: #1E9FFF">文件传递：</b><br/>
+                            必须首先填写用户名，填写完用户名后，点击立即上传按钮，选择你要上传的文件，确定上传即可<br/>
+                            访问平台地址：<b style="color:#eb7350">10.43.1.7/你填写的用户名</b>，然后点击下载文件，即可将文件下载到本地
                             `, {
                     time: 200000,
                     btn: ['明白了']

@@ -41,7 +41,16 @@ def get_msg(user):
     user_li = User.query.filter(User.user == user).first()
     if user_li is None:
         return render_template("404.html")
-    return render_template("copy.html", msg=user_li)
+    context = {
+        "user": user_li.user,
+        "msg": user_li.msg,
+        "filename": user_li.file_name,
+    }
+    if not user_li.msg:
+        context["msg"] = "你没有提交内容！"
+    if not user_li.file_name:
+        context["filename"] = "你没有上传文件！"
+    return render_template("copy.html", context=context)
 
 
 @tools.route("/", methods=["GET"])
