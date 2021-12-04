@@ -9,7 +9,7 @@ app = Flask(__name__, template_folder='../templates', static_folder='../static')
 
 def create_app():
     # 导入配置文件
-    app.config.from_object(settings.Development)
+    app.config.from_object(settings.Production)
     db.init_app(app=app)
     # 注册蓝图
     app.register_blueprint(tools)
