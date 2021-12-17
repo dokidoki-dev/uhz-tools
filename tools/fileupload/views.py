@@ -31,7 +31,7 @@ def upload():
         data["code"] = 9999
         return Response(json.dumps(data), content_type="application/json")
     file_id = "".join(str(uuid.uuid1()).split("-"))
-    file_name = file_id + "." + file_obj.filename.split(".")[1]
+    file_name = file_id + "." + file_obj.filename.split(".")[-1]
     user = User()
     user_name = User.query.filter(User.user == user_id).first()
     if user_name is None:
