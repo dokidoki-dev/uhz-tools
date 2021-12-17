@@ -37,7 +37,7 @@ def upload():
     if user_name is None:
         user.user = user_id
         user.create_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
-        file_obj.save(upload_path + "\\" + file_name)
+        file_obj.save(upload_path + "/" + file_name)
         user.file_name = file_name
         db.session.add(user)
         db.session.commit()
@@ -48,8 +48,8 @@ def upload():
         # 处理旧文件覆盖删除问题
         if user_name.file_name:
             try:
-                if os.path.exists(upload_path + "\\" + user_name.file_name):
-                    os.remove(upload_path + "\\" + user_name.file_name)
+                if os.path.exists(upload_path + "/" + user_name.file_name):
+                    os.remove(upload_path + "/" + user_name.file_name)
             except Exception as e:
                 print(e)
             else:
@@ -57,7 +57,7 @@ def upload():
         user_name.update_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         user_name.file_name = file_name
         db.session.commit()
-        file_obj.save(upload_path + "\\" + file_name)
+        file_obj.save(upload_path + "/" + file_name)
         data["msg"] = "上传成功"
         data["code"] = 200
         return Response(json.dumps(data), content_type="application/json")
@@ -73,7 +73,7 @@ def downloads(user):
     elif settings.Config.download_mode == 2:
         # 使用流式下载
         def send_file():
-            with open(upload_path + "\\" + li.file_name, 'rb') as targetfile:
+            with open(upload_path + "/" + li.file_name, 'rb') as targetfile:
                 while 1:
                     data = targetfile.read(2 * 1024 * 1024)  # 每次读取2MB (可用限速)
                     if not data:
