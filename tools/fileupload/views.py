@@ -1,4 +1,4 @@
-import json
+﻿import json
 import uuid
 from datetime import datetime
 import os
@@ -81,6 +81,10 @@ def downloads(user):
                     yield data
         response = Response(send_file(), content_type='application/octet-stream')
         response.headers["Content-disposition"] = 'attachment; filename={}'.format(li.file_name)
+        response.headers["Content-Length"] = os.stat(str(upload_path + "/" + li.file_name)).st_size
+        response.headers["Pragma"] = "no-cache,no-store,must-revalidate"
+        response.headers["Cache-Control"] = "no-cache"
+        response.headers["Expires"] = "0"
         return response
     return "未知异常"
 
