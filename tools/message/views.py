@@ -41,11 +41,9 @@ def get_msg(user):
     user_li = User.query.filter(User.user == user).first()
     if user_li is None:
         return render_template("404.html")
-    up_time = user_li.update_time
-    if user_li.update_time is None:
-        up_time = user_li.create_time
-        if user_li.file_name is None:
-            up_time = "暂无数据"
+    up_time = user_li.upload_time
+    if up_time is None:
+        up_time = "暂无数据"
     context = {
         "user": user_li.user,
         "msg": user_li.msg,

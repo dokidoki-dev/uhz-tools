@@ -58,6 +58,7 @@ def upload():
             else:
                 pass
         user_name.update_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+        user_name.upload_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         user_name.file_name = file_name
         user_name.file_show_name = file_show_name
         db.session.commit()

@@ -10,6 +10,7 @@ class User(db.Model):
     file_show_name = db.Column(db.String(255), nullable=True, comment="文件页面展示名字")
     create_time = db.Column(db.DateTime, nullable=False, comment="创建时间")
     update_time = db.Column(db.DateTime, nullable=True, comment="更新时间")
+    upload_time = db.Column(db.DateTime, nullable=True, comment="文件上传时间")
 
     def __str__(self):
         return self.msg
