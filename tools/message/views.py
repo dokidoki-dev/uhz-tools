@@ -44,7 +44,7 @@ def get_msg(user):
     context = {
         "user": user_li.user,
         "msg": user_li.msg,
-        "filename": user_li.file_name,
+        "filename": user_li.file_show_name,
     }
     if not user_li.msg:
         context["msg"] = "你没有提交内容！"

@@ -32,6 +32,7 @@ def upload():
         return Response(json.dumps(data), content_type="application/json")
     file_id = "".join(str(uuid.uuid1()).split("-"))
     file_name = file_id + "." + file_obj.filename.split(".")[-1]
+    file_show_name = file_obj.filename
     user = User()
     user_name = User.query.filter(User.user == user_id).first()
     if user_name is None:
@@ -39,6 +40,8 @@ def upload():
         user.create_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         file_obj.save(upload_path + "/" + file_name)
         user.file_name = file_name
+        # 文件原始名字
+        user.file_show_name = file_show_name
         db.session.add(user)
         db.session.commit()
         data["msg"] = "上传成功"
@@ -56,6 +59,7 @@ def upload():
                 pass
         user_name.update_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         user_name.file_name = file_name
+        user_name.file_show_name = file_show_name
         db.session.commit()
         file_obj.save(upload_path + "/" + file_name)
         data["msg"] = "上传成功"
